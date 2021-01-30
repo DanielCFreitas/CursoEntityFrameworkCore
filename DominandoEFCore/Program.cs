@@ -1,12 +1,31 @@
-﻿using System;
+﻿using DominandoEFCore.Data;
 
 namespace DominandoEFCore
 {
-    class Program
+    public class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            EnsureDeleted();
+        }
+
+        /// <summary>
+        /// Executando método para criar o banco de dados para caso ele ainda não exista, de acordo com a string de conexao
+        /// que foi passada dentro do ApplicationContext
+        /// </summary>
+        static void EnsureCreated()
+        {
+            var db = new ApplicationContext();
+            db.Database.EnsureCreated();
+        }
+
+        /// <summary>
+        /// Executando método para excluir banco de dados
+        /// </summary>
+        static void EnsureDeleted()
+        {
+            var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
         }
     }
 }
