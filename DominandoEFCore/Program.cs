@@ -1,6 +1,9 @@
 ﻿using DominandoEFCore.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
+using System;
+using System.Linq;
 
 namespace DominandoEFCore
 {
@@ -8,7 +11,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            GapDoEnsureCreated();
+            HealthCheckBancoDeDados();
         }
 
         /// <summary>
@@ -44,6 +47,24 @@ namespace DominandoEFCore
 
             var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
             databaseCreator.CreateTables();
+        }
+
+        /// <summary>
+        /// Fazendo um HealthCheck do banco de dados, verificar se a conexão com o banco está funcionando
+        /// </summary>
+        static void HealthCheckBancoDeDados()
+        {
+            using var db = new ApplicationContext();
+            var canConnect = db.Database.CanConnect();
+
+            if (canConnect)
+            {
+                Console.WriteLine("Posso me conectar");
+            }
+            else
+            {
+                Console.WriteLine("Não posso me conectar");
+            }
         }
     }
 }
