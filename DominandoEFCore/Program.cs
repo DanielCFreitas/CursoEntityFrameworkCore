@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Diagnostics;
 using System.Linq;
 
 namespace DominandoEFCore
@@ -11,7 +12,11 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            HealthCheckBancoDeDados();
+            new ApplicationContext().Departamentos.AsNoTracking().Any();
+            _count = 0;
+            GerenciarEstadoDaConexao(false);
+            _count = 0;
+            GerenciarEstadoDaConexao(true);
         }
 
         /// <summary>
@@ -65,6 +70,43 @@ namespace DominandoEFCore
             {
                 Console.WriteLine("Não posso me conectar");
             }
+        }
+
+        /// <summary>
+        /// Deixando o gerenciamento de conexão com o desenvolvedor ao invés do EntityFramework gerenciar
+        /// Ganho de Performance e diminuição do número de conexão abertas
+        /// 
+        /// Programa que vai no Main para testar: 
+        /// 
+        /// new ApplicationContext().Departamentos.AsNoTracking().Any();
+        //_count = 0;
+        //  GerenciarEstadoDaConexao(false);
+        //_count = 0;
+        //  GerenciarEstadoDaConexao(true);
+        /// </summary>
+        static int _count;
+        static void GerenciarEstadoDaConexao(bool gerenciarEstadoConexao)
+        {
+            using var db = new ApplicationContext();
+            var time = Stopwatch.StartNew();
+
+            var conexao = db.Database.GetDbConnection();
+            conexao.StateChange += (_, __) => ++_count;
+
+            if (gerenciarEstadoConexao)
+            {
+                conexao.Open();
+            }
+
+            for(var i = 0; i<200; i++)
+            {
+                db.Departamentos.AsNoTracking().Any();
+            }
+
+            time.Stop();
+            var mensagem = $"Tempo: {time.Elapsed.ToString()}, {gerenciarEstadoConexao}, Contador: {_count}";
+
+            Console.WriteLine(mensagem);
         }
     }
 }
