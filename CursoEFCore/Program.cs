@@ -12,21 +12,13 @@ namespace CursoEFCore
     {
         static void Main(string[] args)
         {
-            /*using var db = new Data.ApplicationContext();
-            
-            var existe = db.Database.GetPendingMigrations().Any();
-            if (existe)
-            {
-
-            }*/
-
-
             RemoverRegistroApenasComId();
         }
 
-
-
-        // Inserir
+        #region Inserir
+        /// <summary>
+        /// Inserir registro no banco de dados
+        /// </summary>
         private static void InserirDados()
         {
             var produto = new Produto
@@ -47,7 +39,45 @@ namespace CursoEFCore
             var registros = db.SaveChanges();
             Console.WriteLine($"Total de {registros} registros");
         }
-        private static void InserirDadosEmMassa()
+
+        /// <summary>
+        /// Inserir vários objetos do mesmo tipo no banco de dados
+        /// </summary>
+        private static void InserirObjetosDoMesmoTipoEmMassa()
+        {
+            var db = new ApplicationContext();
+
+            var listaDeClientes = new[]
+            {
+                new Cliente()
+                {
+                    Nome = "Teste1",
+                    CEP = "99999000",
+                    Cidade = "Itabaiana",
+                    Estado = "SE",
+                    Telefone = "99000001111"
+                },
+                new Cliente()
+                {
+                    Nome = "Teste2",
+                    CEP = "99999000",
+                    Cidade = "Itabaiana",
+                    Estado = "SE",
+                    Telefone = "99000001111"
+                }
+            };
+
+            db.Clientes.AddRange(listaDeClientes);
+
+            var registros = db.SaveChanges();
+
+            Console.WriteLine($"Foram afetados {registros} registros");
+        }
+
+        /// <summary>
+        /// Inserir vários objetos de tipos diferentes no banco de dados
+        /// </summary>
+        private static void InserirObjetosDeTiposDiferentesEmMassa()
         {
             var db = new ApplicationContext();
 
@@ -71,32 +101,148 @@ namespace CursoEFCore
             };
             db.AddRange(produto, cliente);
 
-            // Lista de objetos iguais
-            /*var listaDeClientes = new[]
-            {
-                new Cliente()
-                {
-                    Nome = "Teste1",
-                    CEP = "99999000",
-                    Cidade = "Itabaiana",
-                    Estado = "SE",
-                    Telefone = "99000001111"
-                },
-                new Cliente()
-                {
-                    Nome = "Teste2",
-                    CEP = "99999000",
-                    Cidade = "Itabaiana",
-                    Estado = "SE",
-                    Telefone = "99000001111"
-                }
-            };*/
-            //db.Clientes.AddRange(listaDeClientes);
-
             var registros = db.SaveChanges();
 
             Console.WriteLine($"Foram afetados {registros} registros");
         }
+        #endregion
+
+        #region Consultar
+        /// <summary>
+        /// Consultando dados do banco de dados
+        /// </summary>
+        private static void ConsultarDados()
+        {
+            var db = new ApplicationContext();
+
+            // Consulta por Sintaxe
+            var consultaPorSintaxe = (from c in db.Clientes where c.Id > 0 select c).ToList();
+
+            // Consulta por metodo
+            var consultaPorMetodo = db.Clientes
+                .Where(cliente => cliente.Id > 0)
+                .ToList();
+
+            foreach (var cliente in consultaPorMetodo)
+            {
+                Console.WriteLine($"Consultando Cliente: {cliente.Id}");
+            }
+        }
+
+        /// <summary>
+        /// Consultar dados com carregamento adiantado
+        /// </summary>
+        private static void ConsultarPedidoCarregamentoAdiantado()
+        {
+            using var db = new ApplicationContext();
+            var pedidos = db.Pedidos
+                .Include(i => i.Itens)
+                .ThenInclude(i => i.Produto)
+                .ToList();
+
+            Console.WriteLine(pedidos.Count);
+        }
+        #endregion
+
+        #region Atualizar
+        /// <summary>
+        /// Faz Update com todos os campos do objeto (campos alterados ou nao)
+        /// </summary>
+        private static void AtualizarTodosOsDados()
+        {
+            var db = new ApplicationContext();
+
+            var cliente = db.Clientes.Find(1);
+            cliente.Nome = "Daniel";
+            db.Clientes.Update(cliente);
+
+            db.SaveChanges();
+        }
+        /// <summary>
+        /// Faz o Update com todos os campos do objeto (campos alterados ou nao)
+        /// </summary>
+        private static void AtualizarTodosOsDados2()
+        {
+            var db = new ApplicationContext();
+
+            var cliente = db.Clientes.Find(1);
+            cliente.Nome = "Daniel2";
+            db.Entry(cliente).State = EntityState.Modified;
+
+            db.SaveChanges();
+        }
+        /// <summary>
+        /// Faz o Update apenas com o campo que foi alterado fazendo a consulta antes do objeto no banco
+        /// </summary>
+        private static void AtualizarApenasOsCamposAlterados()
+        {
+            var db = new ApplicationContext();
+
+            var cliente = db.Clientes.Find(1);
+            cliente.Nome = "Daniel3";
+
+            db.SaveChanges();
+        }
+        /// <summary>
+        /// Faz o Update apenas com o campo que foi alterado sem a necessidade de consultar o objeto no banco
+        /// </summary>
+        private static void AtualizarApenasOsCamposAlterados2()
+        {
+            var db = new ApplicationContext();
+
+            var cliente = new Cliente()
+            {
+                Id = 1,
+            };
+
+            var clienteDesconectado = new
+            {
+                Nome = "Daniel4"
+            };
+
+            db.Attach(cliente);
+            db.Entry(cliente).CurrentValues.SetValues(clienteDesconectado);
+            db.SaveChanges();
+        }
+        #endregion
+
+        #region Remover
+        /// <summary>
+        /// Remove registro do banco de dados, realizando antes a consulta do objeto no banco de dados
+        /// </summary>
+        private static void RemoverRegistro()
+        {
+            var db = new ApplicationContext();
+            var cliente = db.Clientes.Find(2);
+            db.Clientes.Remove(cliente);
+            //db.Remove(cliente);
+            //db.Entry(cliente).State = EntityState.Deleted;
+
+            db.SaveChanges();
+        }
+
+        /// <summary>
+        /// Remove registro do banco de dados, sem a necessidade de consultar o objeto no banco de dados
+        /// </summary>
+        private static void RemoverRegistroApenasComId()
+        {
+            var db = new ApplicationContext();
+            var cliente = new Cliente { Id = 3 };
+            db.Clientes.Remove(cliente);
+            //db.Remove(cliente);
+            //db.Entry(cliente).State = EntityState.Deleted;
+
+            db.SaveChanges();
+        }
+        #endregion
+
+
+
+
+        #region MetodosParaFazerOsTestesAnteriores
+        /// <summary>
+        /// Método para realizar testes de consulta
+        /// </summary>
         private static void CadastrarPedido()
         {
             using var db = new ApplicationContext();
@@ -128,116 +274,6 @@ namespace CursoEFCore
 
             db.SaveChanges();
         }
-
-
-
-        // Consultar
-        private static void ConsultarDados()
-        {
-            var db = new ApplicationContext();
-
-            
-            var consultaPorSintaxe = (from c in db.Clientes where c.Id > 0 select c).ToList();
-
-            var consultaPorMetodo = db.Clientes
-                .Where(cliente => cliente.Id > 0)
-                .ToList();
-
-            foreach(var cliente in consultaPorMetodo)
-            {
-                Console.WriteLine($"Consultando Cliente: {cliente.Id}");
-                //db.Clientes.Find(cliente.Id);
-                db.Clientes.FirstOrDefault(f => f.Id == cliente.Id);
-            }
-        }
-        private static void ConsultarPedidoCarregamentoAdiantado()
-        {
-            using var db = new ApplicationContext();
-            var pedidos = db.Pedidos
-                .Include(i => i.Itens)
-                .ThenInclude(i => i.Produto)
-                .ToList();
-
-            Console.WriteLine(pedidos.Count);
-        }
-
-
-
-        // Atualizar 
-        private static void AtualizarTodosOsDados()
-        {
-            var db = new ApplicationContext();
-
-            var cliente = db.Clientes.Find(1);
-            cliente.Nome = "Daniel";
-            db.Clientes.Update(cliente);
-
-            db.SaveChanges();
-        }
-        private static void AtualizarTodosOsDados2()
-        {
-            var db = new ApplicationContext();
-
-            var cliente = db.Clientes.Find(1);
-            cliente.Nome = "Daniel2";
-            db.Entry(cliente).State = EntityState.Modified;
-
-            db.SaveChanges();
-        }
-
-
-        private static void AtualizarApenasOsCamposAlterados()
-        {
-            var db = new ApplicationContext();
-
-            var cliente = db.Clientes.Find(1);
-            cliente.Nome = "Daniel3";
-
-            db.SaveChanges();
-        }
-        private static void AtualizarApenasOsCamposAlterados2()
-        {
-            var db = new ApplicationContext();
-
-            var cliente = new Cliente()
-            {
-                Id = 1,
-            };
-
-            var clienteDesconectado = new 
-            {
-                Nome = "Daniel4"
-            };
-
-            db.Attach(cliente);
-            db.Entry(cliente).CurrentValues.SetValues(clienteDesconectado);
-            db.SaveChanges();
-        }
-    
-
-
-        // Remover
-        private static void RemoverRegistro()
-        {
-            var db = new ApplicationContext();
-            var cliente = db.Clientes.Find(2);
-            db.Clientes.Remove(cliente);
-            //db.Remove(cliente);
-            //db.Entry(cliente).State = EntityState.Deleted;
-
-            db.SaveChanges();
-        }
-
-
-        private static void RemoverRegistroApenasComId()
-        {
-            var db = new ApplicationContext();
-            var cliente = new Cliente { Id = 3 };
-            db.Clientes.Remove(cliente);
-            //db.Remove(cliente);
-            //db.Entry(cliente).State = EntityState.Deleted;
-
-            db.SaveChanges();
-        }
+        #endregion
     }
 }

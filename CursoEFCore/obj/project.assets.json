@@ -1072,11 +1072,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Backup Organizado\\Estudo\\Desenvolvedor.IO\\CursoEFCore\\CursoEFCore\\CursoEFCore.csproj",
+      "projectUniqueName": "D:\\Backup Organizado\\Estudo\\Desenvolvedor.IO\\CursoEntityFrameworkCore\\CursoEFCore\\CursoEFCore.csproj",
       "projectName": "CursoEFCore",
-      "projectPath": "D:\\Backup Organizado\\Estudo\\Desenvolvedor.IO\\CursoEFCore\\CursoEFCore\\CursoEFCore.csproj",
+      "projectPath": "D:\\Backup Organizado\\Estudo\\Desenvolvedor.IO\\CursoEntityFrameworkCore\\CursoEFCore\\CursoEFCore.csproj",
       "packagesPath": "C:\\Users\\danie\\.nuget\\packages\\",
-      "outputPath": "D:\\Backup Organizado\\Estudo\\Desenvolvedor.IO\\CursoEFCore\\CursoEFCore\\obj\\",
+      "outputPath": "D:\\Backup Organizado\\Estudo\\Desenvolvedor.IO\\CursoEntityFrameworkCore\\CursoEFCore\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\danie\\AppData\\Roaming\\NuGet\\NuGet.Config",
