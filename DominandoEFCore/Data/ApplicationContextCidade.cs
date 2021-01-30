@@ -1,0 +1,22 @@
+﻿using DominandoEFCore.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using System;
+
+namespace DominandoEFCore.Data
+{
+    public class ApplicationContextCidade : DbContext
+    {
+        public DbSet<Cidade> Cidades { get; set; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=C002;";
+
+            optionsBuilder
+                .UseNpgsql(strConnection) // String de conexao com o banco de dados
+                .EnableSensitiveDataLogging() // Para exibir os valores dos parametros ao logar o SQL no console
+                .LogTo(Console.WriteLine, LogLevel.Information); // Onde deve logar a consulta e o nivel do Log
+        }
+    }
+}
