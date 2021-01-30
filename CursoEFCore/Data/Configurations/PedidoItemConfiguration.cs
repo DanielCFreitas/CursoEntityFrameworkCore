@@ -1,0 +1,20 @@
+﻿using CursoEFCore.Domain;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace CursoEFCore.Data.Configurations
+{
+    public class PedidoItemConfiguration : IEntityTypeConfiguration<PedidoItem>
+    {
+        public void Configure(EntityTypeBuilder<PedidoItem> builder)
+        {
+            builder.ToTable("PedidoItem");
+
+            builder.HasKey(k => k.Id);
+
+            builder.Property(p => p.Quantidade).HasDefaultValue(0).IsRequired();
+            builder.Property(p => p.Valor).HasDefaultValue(0).IsRequired();
+            builder.Property(p => p.Desconto).HasDefaultValue(0).IsRequired();
+        }
+    }
+}
