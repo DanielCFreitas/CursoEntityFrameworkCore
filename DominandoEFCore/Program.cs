@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultaParametrizada();
+            ConsultaInterpolada();
         }
 
         #region Metodos de apoio para o curso
@@ -472,6 +472,25 @@ namespace DominandoEFCore
             var departamentos = db.Departamentos
                 .FromSqlRaw("SELECT * FROM \"Departamentos\" WHERE \"Id\" > {0}", id) // Consulta parametrizada
                 .Where(w => !w.Excluido)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        /// <summary>
+        /// Exemplo de consulta interpolada com FromSql
+        /// </summary>
+        static void ConsultaInterpolada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var id = 0;
+            var departamentos = db.Departamentos
+                .FromSqlInterpolated($"SELECT * FROM \"Departamentos\" WHERE \"Id\" > {id}") // Consulta Interpolada
                 .ToList();
 
             foreach (var departamento in departamentos)
