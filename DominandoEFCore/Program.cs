@@ -13,7 +13,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ExemploDeProblemaComSQLInjection();
+            MigracoesPendentes();
         }
 
         /// <summary>
@@ -159,6 +159,23 @@ namespace DominandoEFCore
             foreach(var departamento in db.Departamentos.AsNoTracking())
             {
                 Console.WriteLine($"Id: {departamento.Id}, Descricao: {departamento.Descricao}");
+            }
+        }
+
+        /// <summary>
+        /// Verificar migracoes que estão pendentes
+        /// </summary>
+        static void MigracoesPendentes()
+        {
+            using var db = new ApplicationContext();
+
+            var migracoesPendentes = db.Database.GetPendingMigrations();
+
+            Console.WriteLine($"Total: {migracoesPendentes.Count()}");
+
+            foreach(var migracao in migracoesPendentes)
+            {
+                Console.WriteLine($"Migração: {migracao}");
             }
         }
     }
