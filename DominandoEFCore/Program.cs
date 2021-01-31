@@ -108,5 +108,27 @@ namespace DominandoEFCore
 
             Console.WriteLine(mensagem);
         }
+
+        /// <summary>
+        /// Executa comandos SQL no banco de dados
+        /// </summary>
+        static void ExecutarSQL()
+        {
+            using var db = new ApplicationContext();
+
+            // Primeira Opção
+            using(var cmd = db.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.ExecuteNonQuery();
+            }
+
+            // Segunda Opção (Deixando passar DBParameter, evitando SQL Injection)
+            var descricao = "Teste";
+            db.Database.ExecuteSqlRaw("UPDATE departamento SET descricao={0} WHERE id=1", descricao);
+
+            // Terceira Opção (Usa interpolação usando DBParameter, evita também SQL Injection)
+            db.Database.ExecuteSqlInterpolated($"UPDATE departamento SET descricao={descricao} WHERE id=1");
+        }
     }
 }
