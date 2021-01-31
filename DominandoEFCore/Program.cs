@@ -17,6 +17,60 @@ namespace DominandoEFCore
             CarregamentoLento();
         }
 
+        #region Metodos de apoio para o curso
+        /// <summary>
+        /// Setup apenas para popular o banco de dados para arealizar alguns exemplos
+        /// </summary>
+        /// <param name="db"></param>
+        static void Setup(ApplicationContext db)
+        {
+            if (!db.Departamentos.Any())
+            {
+                db.Departamentos.AddRange(
+                    new Departamento()
+                    {
+                        Ativo = true,
+                        Descricao = "Departamento 01",
+                        Funcionarios = new List<Funcionario>
+                        {
+                            new Funcionario
+                            {
+                                Nome = "Rafael Almeida",
+                                CPF = "999999991",
+                                RG = "2100062"
+                            }
+                        },
+                        Excluido = true
+                    },
+                    new Departamento()
+                    {
+                        Descricao = "Departamento 02",
+                        Funcionarios = new List<Funcionario>
+                        {
+                            new Funcionario
+                            {
+                                Nome = "Bruno Brito",
+                                CPF = "8888888882",
+                                RG = "3100062"
+                            },
+                            new Funcionario
+                            {
+                                Nome = "Eduardo Pires",
+                                CPF = "77777777772",
+                                RG = "1111052"
+                            }
+                        }
+                    }
+                );
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
+        }
+        #endregion
+
+
+
+
         #region Metodos do DATABASE para operações relacionadas ao banco de dados para um contexto
         /// <summary>
         /// Executando método para criar o banco de dados para caso ele ainda não exista, de acordo com a string de conexao
@@ -234,66 +288,14 @@ namespace DominandoEFCore
         }
         #endregion
 
-
-
-
-
         #region Tipos de Carregamento
-
-        /// <summary>
-        /// Setup apenas para realizar os exemplos de Carregamentos populando o banco de dados
-        /// </summary>
-        /// <param name="db"></param>
-        static void SetupTiposCarregamentos(ApplicationContext db)
-        {
-            if (!db.Departamentos.Any())
-            {
-                db.Departamentos.AddRange(
-                    new Departamento()
-                    {
-                        Descricao = "Departamento 01",
-                        Funcionarios = new List<Funcionario>
-                        {
-                            new Funcionario
-                            {
-                                Nome = "Rafael Almeida",
-                                CPF = "999999991",
-                                RG = "2100062"
-                            }
-                        }
-                    },
-                    new Departamento()
-                    {
-                        Descricao = "Departamento 02",
-                        Funcionarios = new List<Funcionario>
-                        {
-                            new Funcionario
-                            {
-                                Nome = "Bruno Brito",
-                                CPF = "8888888882",
-                                RG = "3100062"
-                            },
-                            new Funcionario
-                            {
-                                Nome = "Eduardo Pires",
-                                CPF = "77777777772",
-                                RG = "1111052"
-                            }
-                        }
-                    }
-                );
-                db.SaveChanges();
-                db.ChangeTracker.Clear();
-            }
-        }
-
         /// <summary>
         /// Exemplo de uso do carregamento adiantado
         /// </summary>
         static void CarregamentoAdiantado()
         {
             using var db = new ApplicationContext();
-            SetupTiposCarregamentos(db);
+            Setup(db);
 
             var departamentos = db
                 .Departamentos
@@ -324,7 +326,7 @@ namespace DominandoEFCore
         static void CarregamentoExplicito()
         {
             using var db = new ApplicationContext();
-            SetupTiposCarregamentos(db);
+            Setup(db);
 
             var departamentos = db
                 .Departamentos
@@ -366,7 +368,7 @@ namespace DominandoEFCore
         static void CarregamentoLento()
         {
             using var db = new ApplicationContext();
-            SetupTiposCarregamentos(db);
+            Setup(db);
 
             // Para desabilitar o carregamento lento e não realizar consultas a cada propriedade acessada
             //db.ChangeTracker.LazyLoadingEnabled = false; 
@@ -394,6 +396,10 @@ namespace DominandoEFCore
             }
         }
         #endregion
+
+
+
+
 
 
 

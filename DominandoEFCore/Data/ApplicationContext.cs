@@ -12,7 +12,7 @@ namespace DominandoEFCore.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=C002;";
+            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
             optionsBuilder
                 .UseNpgsql(strConnection) // String de conexao com o banco de dados

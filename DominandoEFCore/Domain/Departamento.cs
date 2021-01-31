@@ -9,12 +9,14 @@ namespace DominandoEFCore.Domain
         public int Id { get; set; }
         public string Descricao { get; set; }
         public bool Ativo { get; set; }
+        public bool Excluido { get; set; }
+        public List<Funcionario> Funcionarios { get; set; }
 
-        public Departamento() { }
+        //public Departamento() { }
 
 
         // Lazy Loading Metodo Alternativo 2
-        private Action<object,string> _lazyLoader { get; set; }
+        /*private Action<object,string> _lazyLoader { get; set; }
         private Departamento(Action<object, string> lazyLoader)
         {
             _lazyLoader = lazyLoader;
@@ -29,7 +31,16 @@ namespace DominandoEFCore.Domain
                 return _funcionarios;
             }
             set => _funcionarios = value;
-        }
+        }*/
+
+
+
+
+
+
+
+
+
 
         // Lazy Loading Metodo Alternativo
         /*private ILazyLoader _lazyLoader { get; set; }
