@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            CarregamentoAdiantado();
+            CarregamentoExplicito();
         }
 
         #region Metodos do DATABASE para operações relacionadas ao banco de dados para um contexto
@@ -307,6 +307,48 @@ namespace DominandoEFCore
                 if(departamento.Funcionarios?.Any() ?? false)
                 {
                     foreach(var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum Funcionário encontrado!");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Exemplo de uso do carregamento explicito
+        /// </summary>
+        static void CarregamentoExplicito()
+        {
+            using var db = new ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db
+                .Departamentos
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                if(departamento.Id == 2)
+                {
+                   // db.Entry(departamento).Collection(c => c.Funcionarios)
+                   //     .Load(); // Carregando explicitamente
+
+                    db.Entry(departamento).Collection(c => c.Funcionarios)
+                        .Query()
+                        .Where(w => w.Id > 2)
+                        .ToList(); // Carregamento explicito com condicao where
+                }
+
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
                     {
                         Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
                     }
