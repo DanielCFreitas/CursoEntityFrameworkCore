@@ -16,6 +16,7 @@ namespace DominandoEFCore
             ScriptGeralDoBancoDeDados();
         }
 
+        #region Metodos do DATABASE para operações relacionadas ao banco de dados para um contexto
         /// <summary>
         /// Executando método para criar o banco de dados para caso ele ainda não exista, de acordo com a string de conexao
         /// que foi passada dentro do ApplicationContext
@@ -230,5 +231,11 @@ namespace DominandoEFCore
 
             Console.WriteLine(script);
         }
+        #endregion
+    
+        
+    
+    
+    
     }
 }
