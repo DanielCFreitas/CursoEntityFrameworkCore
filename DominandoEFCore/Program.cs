@@ -13,7 +13,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            MigracoesPendentes();
+            AplicarMigracaoEmTempoDeExecucao();
         }
 
         /// <summary>
@@ -177,6 +177,15 @@ namespace DominandoEFCore
             {
                 Console.WriteLine($"Migração: {migracao}");
             }
+        }
+
+        /// <summary>
+        /// Aplicando migracao em tempo de execução
+        /// </summary>
+        static void AplicarMigracaoEmTempoDeExecucao()
+        {
+            using var db = new ApplicationContext();
+            db.Database.Migrate();
         }
     }
 }
