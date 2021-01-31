@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultaProjetada();
+            ConsultaParametrizada();
         }
 
         #region Metodos de apoio para o curso
@@ -457,6 +457,26 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"\tDescrição: {funcionario}");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Exemplo de consulta parametrizada
+        /// </summary>
+        static void ConsultaParametrizada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var id = 0;
+            var departamentos = db.Departamentos
+                .FromSqlRaw("SELECT * FROM \"Departamentos\" WHERE \"Id\" > {0}", id) // Consulta parametrizada
+                .Where(w => !w.Excluido)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
             }
         }
     }
