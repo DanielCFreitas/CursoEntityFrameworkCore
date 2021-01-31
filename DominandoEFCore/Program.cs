@@ -1,4 +1,5 @@
 ﻿using DominandoEFCore.Data;
+using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -12,11 +13,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            new ApplicationContext().Departamentos.AsNoTracking().Any();
-            _count = 0;
-            GerenciarEstadoDaConexao(false);
-            _count = 0;
-            GerenciarEstadoDaConexao(true);
+            ExemploDeProblemaComSQLInjection();
         }
 
         /// <summary>
@@ -129,6 +126,40 @@ namespace DominandoEFCore
 
             // Terceira Opção (Usa interpolação usando DBParameter, evita também SQL Injection)
             db.Database.ExecuteSqlInterpolated($"UPDATE departamento SET descricao={descricao} WHERE id=1");
+        }
+
+        /// <summary>
+        /// Exemplo de problemas com SQL Injection
+        /// </summary>
+        static void ExemploDeProblemaComSQLInjection()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Departamentos.AddRange(
+                new Departamento()
+                {
+                    Descricao = "Departamento 01"
+                },
+                new Departamento()
+                {
+                    Descricao = "Departamento 02"
+                });
+            db.SaveChanges();
+
+            var descricao = "Departamento 01";
+            //db.Database.ExecuteSqlRaw("UPDATE \"Departamentos\" SET \"Descricao\"='DepartamentoAlterado' WHERE \"Descricao\"={0}", descricao); // Com DBParameter com protecao para SQL Injection
+            
+            // Ao concatenar o SQL a query fica vulneravel, podendo colocar condicoes a mais que nao deveriam existir
+            // compremetendo a base de dados
+            descricao = "'teste' or 1=1";
+            db.Database.ExecuteSqlRaw($"UPDATE \"Departamentos\" SET \"Descricao\"='AtaqueSQLInjection' WHERE \"Descricao\"={descricao}"); // Sem DBParameter, vuneravel para SQLInjection
+
+            foreach(var departamento in db.Departamentos.AsNoTracking())
+            {
+                Console.WriteLine($"Id: {departamento.Id}, Descricao: {departamento.Descricao}");
+            }
         }
     }
 }
