@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultaInterpolada();
+            ConsultaComTag();
         }
 
         #region Metodos de apoio para o curso
@@ -491,6 +491,24 @@ namespace DominandoEFCore
             var id = 0;
             var departamentos = db.Departamentos
                 .FromSqlInterpolated($"SELECT * FROM \"Departamentos\" WHERE \"Id\" > {id}") // Consulta Interpolada
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        /// <summary>
+        /// Exemplo de consulta com Tag
+        /// </summary>
+        static void ConsultaComTag()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .TagWith("Estou enviando um comentário para o servidor") // Adicionando Tag para consulta, enviar tag para servidor
                 .ToList();
 
             foreach (var departamento in departamentos)
