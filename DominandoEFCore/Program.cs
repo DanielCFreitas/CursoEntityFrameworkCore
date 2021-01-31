@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            IgnorandoFiltroGlobal();
+            ConsultaProjetada();
         }
 
         #region Metodos de apoio para o curso
@@ -415,7 +415,6 @@ namespace DominandoEFCore
             }
         }
 
-
         /// <summary>
         /// Exemplo de uso de Filtro Global
         /// </summary>
@@ -431,6 +430,33 @@ namespace DominandoEFCore
             foreach (var departamento in departamentos)
             {
                 Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
+        }
+
+        /// <summary>
+        /// Exemplo de consulta projetada, selecionando apenas colunas que são utilizadas
+        /// </summary>
+        static void ConsultaProjetada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .Where(w => w.Id > 0)
+                .Select(s => new
+                {
+                    s.Descricao,
+                    Funcionarios = s.Funcionarios.Select(f => f.Nome)
+                })
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+                foreach (var funcionario in departamento.Funcionarios)
+                {
+                    Console.WriteLine($"\tDescrição: {funcionario}");
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ namespace DominandoEFCore.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Filtro Global
-            modelBuilder.Entity<Departamento>().HasQueryFilter(q => !q.Excluido);
+            //modelBuilder.Entity<Departamento>().HasQueryFilter(q => !q.Excluido);
         }
     }
 }
