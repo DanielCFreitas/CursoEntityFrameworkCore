@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -13,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ScriptGeralDoBancoDeDados();
+            CarregamentoAdiantado();
         }
 
         #region Metodos do DATABASE para operações relacionadas ao banco de dados para um contexto
@@ -232,10 +233,94 @@ namespace DominandoEFCore
             Console.WriteLine(script);
         }
         #endregion
-    
-        
-    
-    
-    
+
+
+
+
+
+        #region Tipos de Carregamento
+
+        /// <summary>
+        /// Setup apenas para realizar os exemplos de Carregamentos populando o banco de dados
+        /// </summary>
+        /// <param name="db"></param>
+        static void SetupTiposCarregamentos(ApplicationContext db)
+        {
+            if (!db.Departamentos.Any())
+            {
+                db.Departamentos.AddRange(
+                    new Departamento()
+                    {
+                        Descricao = "Departamento 01",
+                        Funcionarios = new List<Funcionario>
+                        {
+                            new Funcionario
+                            {
+                                Nome = "Rafael Almeida",
+                                CPF = "999999991",
+                                RG = "2100062"
+                            }
+                        }
+                    },
+                    new Departamento()
+                    {
+                        Descricao = "Departamento 02",
+                        Funcionarios = new List<Funcionario>
+                        {
+                            new Funcionario
+                            {
+                                Nome = "Bruno Brito",
+                                CPF = "8888888882",
+                                RG = "3100062"
+                            },
+                            new Funcionario
+                            {
+                                Nome = "Eduardo Pires",
+                                CPF = "77777777772",
+                                RG = "1111052"
+                            }
+                        }
+                    }
+                );
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Exemplo de uso do carregamento adiantado
+        /// </summary>
+        static void CarregamentoAdiantado()
+        {
+            using var db = new ApplicationContext();
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db
+                .Departamentos
+                .Include(i => i.Funcionarios);
+
+            foreach(var departamento in departamentos)
+            {
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if(departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach(var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum Funcionário encontrado!");
+                }
+            }
+        }
+
+        #endregion
+
+
+
     }
 }
