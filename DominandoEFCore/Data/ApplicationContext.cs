@@ -20,5 +20,11 @@ namespace DominandoEFCore.Data
                 .EnableSensitiveDataLogging() // Para exibir os valores dos parametros ao logar o SQL no console
                 .LogTo(Console.WriteLine, LogLevel.Information); // Onde deve logar a consulta e o nivel do Log
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Filtro Global
+            modelBuilder.Entity<Departamento>().HasQueryFilter(q => !q.Excluido);
+        }
     }
 }

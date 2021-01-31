@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            CarregamentoLento();
+            FiltroGlobal();
         }
 
         #region Metodos de apoio para o curso
@@ -24,7 +24,7 @@ namespace DominandoEFCore
         /// <param name="db"></param>
         static void Setup(ApplicationContext db)
         {
-            if (!db.Departamentos.Any())
+            if (db.Database.EnsureCreated())
             {
                 db.Departamentos.AddRange(
                     new Departamento()
@@ -98,7 +98,8 @@ namespace DominandoEFCore
         static void GapDoEnsureCreated()
         {
             using var db1 = new ApplicationContext();
-            using var db2 = new ApplicationContextCidade();
+            // Aqui seria outro contexto, o que existia antes para o exemplo foi excluido para organizar o projeto
+            using var db2 = new ApplicationContext(); 
 
             db1.Database.EnsureCreated();
             db2.Database.EnsureCreated();
@@ -398,8 +399,21 @@ namespace DominandoEFCore
         #endregion
 
 
+        /// <summary>
+        /// Exemplo de uso de Filtro Global
+        /// </summary>
+        static void FiltroGlobal()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
 
+            var departamentos = db.Departamentos.Where(w => w.Id > 0).ToList();
 
+            foreach(var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
+        }
 
 
 
