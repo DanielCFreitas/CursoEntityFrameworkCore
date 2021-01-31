@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            CarregamentoExplicito();
+            CarregamentoLento();
         }
 
         #region Metodos do DATABASE para operações relacionadas ao banco de dados para um contexto
@@ -359,7 +359,40 @@ namespace DominandoEFCore
                 }
             }
         }
+        
+        /// <summary>
+        /// Exemplo de uso do carremento lento, faz a consulta no banco quando acessa uma propriedade
+        /// </summary>
+        static void CarregamentoLento()
+        {
+            using var db = new ApplicationContext();
+            SetupTiposCarregamentos(db);
 
+            // Para desabilitar o carregamento lento e não realizar consultas a cada propriedade acessada
+            //db.ChangeTracker.LazyLoadingEnabled = false; 
+            
+            var departamentos = db
+                .Departamentos
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionario: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum Funcionário encontrado!");
+                }
+            }
+        }
         #endregion
 
 
