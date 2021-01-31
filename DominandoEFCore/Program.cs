@@ -13,7 +13,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ListandoTodasAsMigracoes();
+            ScriptGeralDoBancoDeDados();
         }
 
         /// <summary>
@@ -202,6 +202,33 @@ namespace DominandoEFCore
             {
                 Console.WriteLine($"Migração: {migracao}");
             }
+        }
+
+        /// <summary>
+        /// Lista todas as migracoes que já foram aplicadas no banco de dados
+        /// </summary>
+        static void MigracoesJaAplicadas()
+        {
+            using var db = new ApplicationContext();
+            var migracoes = db.Database.GetAppliedMigrations();
+
+            Console.WriteLine($"Total: {migracoes.Count()}");
+
+            foreach (var migracao in migracoes)
+            {
+                Console.WriteLine($"Migração: {migracao}");
+            }
+        }
+
+        /// <summary>
+        /// Gerar script da criação de todas as tabelas do banco de dados
+        /// </summary>
+        static void ScriptGeralDoBancoDeDados()
+        {
+            using var db = new ApplicationContext();
+            var script = db.Database.GenerateCreateScript();
+
+            Console.WriteLine(script);
         }
     }
 }
