@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FiltroGlobal();
+            IgnorandoFiltroGlobal();
         }
 
         #region Metodos de apoio para o curso
@@ -416,6 +416,22 @@ namespace DominandoEFCore
         }
 
 
+        /// <summary>
+        /// Exemplo de uso de Filtro Global
+        /// </summary>
+        static void IgnorandoFiltroGlobal()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
 
+            var departamentos = db.Departamentos
+                .IgnoreQueryFilters() // Ignora filtro global
+                .Where(w => w.Id > 0).ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluido: {departamento.Excluido}");
+            }
+        }
     }
 }
