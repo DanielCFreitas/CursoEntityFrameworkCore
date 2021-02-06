@@ -398,7 +398,7 @@ namespace DominandoEFCore
         }
         #endregion
 
-
+        #region Consultas
         /// <summary>
         /// Exemplo de uso de Filtro Global
         /// </summary>
@@ -582,5 +582,6 @@ namespace DominandoEFCore
                 }
             }
         }
+        #endregion
     }
 }
