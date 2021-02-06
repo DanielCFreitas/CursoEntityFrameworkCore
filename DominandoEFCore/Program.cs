@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultaComTag();
+            EntendendoConsultaN1();
         }
 
         #region Metodos de apoio para o curso
@@ -514,6 +514,46 @@ namespace DominandoEFCore
             foreach (var departamento in departamentos)
             {
                 Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        /// <summary>
+        /// Consulta com relação de 1:N
+        /// </summary>
+        static void EntendendoConsulta1N()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .Include(i => i.Funcionarios)
+                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+                foreach (var funcionario in departamento.Funcionarios)
+                {
+                    Console.WriteLine($"\tNome: {funcionario.Nome}");
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Consulta com relação de N:1
+        /// </summary>
+        static void EntendendoConsultaN1()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var funcionarios = db.Funcionarios
+                .Include(i => i.Departamento)
+                .ToList();
+
+            foreach (var funcionario in funcionarios)
+            {
+                Console.WriteLine($"Nome: {funcionario.Nome} / Departamento: {funcionario.Departamento.Descricao}");
             }
         }
     }
