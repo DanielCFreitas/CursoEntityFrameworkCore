@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            EntendendoConsultaN1();
+            DivisaoDeConsulta();
         }
 
         #region Metodos de apoio para o curso
@@ -554,6 +554,32 @@ namespace DominandoEFCore
             foreach (var funcionario in funcionarios)
             {
                 Console.WriteLine($"Nome: {funcionario.Nome} / Departamento: {funcionario.Departamento.Descricao}");
+            }
+        }
+
+        /// <summary>
+        /// Dividir a consulta para resolver problema de explosão cartesiana 
+        /// carregando dados duplicados durante a consulta
+        /// </summary>
+        static void DivisaoDeConsulta()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos
+                .Include(i => i.Funcionarios)
+                .Where((w => w.Id < 3))
+                .AsSplitQuery() // Método que utiliza a divisão de consulta
+                //.AsSingleQuery() // Ignora configuração global (caso exista) do split query
+                .ToList();
+
+            foreach(var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+                foreach(var funcionario in departamento.Funcionarios)
+                {
+                    Console.WriteLine($"\t{funcionario.Nome}");
+                }
             }
         }
     }

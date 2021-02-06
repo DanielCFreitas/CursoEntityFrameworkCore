@@ -15,7 +15,10 @@ namespace DominandoEFCore.Data
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
             optionsBuilder
-                .UseNpgsql(strConnection) // String de conexao com o banco de dados
+                .UseNpgsql(
+                    strConnection  // String de conexao com o banco de dados
+                   // p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery) // Configura de forma global o splitquery para divisão de consultas no banco de dados
+                )
                 //.UseLazyLoadingProxies() // Ativar o tipo de carregamento lento
                 .EnableSensitiveDataLogging() // Para exibir os valores dos parametros ao logar o SQL no console
                 .LogTo(Console.WriteLine, LogLevel.Information); // Onde deve logar a consulta e o nivel do Log
