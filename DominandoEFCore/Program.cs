@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            CriartStoredProcedureDeConsulta();
+            ConsultarDadosViaProcedure();
         }
 
         #region Metodos de apoio para o curso
@@ -619,6 +619,22 @@ namespace DominandoEFCore
 
             using var db = new ApplicationContext();
             db.Database.ExecuteSqlRaw(criarDepartamentoProcedure);
+        }
+
+        /// <summary>
+        /// Consultando dados via function (procedure) no banco de dados
+        /// </summary>
+        static void ConsultarDadosViaProcedure()
+        {
+            using var db = new ApplicationContext();
+            var departamentos = db.Departamentos
+                .FromSqlRaw("SELECT * FROM GetDepartamentos(@p0)", "Departamento 0")
+                .ToList();
+
+            foreach(var departamento in departamentos)
+            {
+                Console.WriteLine(departamento.Descricao);
+            }
         }
     }
 }
