@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            DivisaoDeConsulta();
+            CriartStoredProcedure();
         }
 
         #region Metodos de apoio para o curso
@@ -583,5 +583,18 @@ namespace DominandoEFCore
             }
         }
         #endregion
+    
+
+        /// <summary>
+        /// Criando StoredProcedure no Banco de Dados
+        /// </summary>
+        static void CriartStoredProcedure()
+        {
+            var criarDepartamentoProcedure = "CREATE OR REPLACE PROCEDURE CriarDepartamento ( Descricao TEXT, Ativo BOOL ) LANGUAGE SQL AS " +
+            "$$ INSERT INTO \"Departamentos\" ( \"Descricao\", \"Ativo\", \"Excluido\" ) VALUES (Descricao, Ativo, FALSE) $$; ";
+
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw(criarDepartamentoProcedure);
+        }
     }
 }
