@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            InserirDadosViaProcedure();
+            CriartStoredProcedureDeConsulta();
         }
 
         #region Metodos de apoio para o curso
@@ -604,6 +604,18 @@ namespace DominandoEFCore
         {
             using var db = new ApplicationContext();
             db.Database.ExecuteSqlRaw("CALL CriarDepartamento(@p0, @p1)", "Departamento Via Procedure", true);
+        }
+
+        static void CriartStoredProcedureDeConsulta()
+        {
+            var criarDepartamentoProcedure = "CREATE OR REPLACE FUNCTION GetDepartamentos(Descricao TEXT) " +
+                                             "RETURNS TABLE( \"Id\" int4, \"Descricao\" TEXT, \"Ativo\" BOOL, \"Excluido\" BOOL ) " +
+                                             "AS $$ " +
+                                             "SELECT * FROM \"Departamentos\" WHERE \"Descricao\" LIKE CONCAT(Descricao, '%' ); " +
+                                             "$$ LANGUAGE SQL;";
+
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw(criarDepartamentoProcedure);
         }
     }
 }
