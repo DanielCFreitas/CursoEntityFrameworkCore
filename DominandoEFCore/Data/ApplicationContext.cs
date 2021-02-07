@@ -1,5 +1,6 @@
 ﻿using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System;
 
@@ -16,12 +17,29 @@ namespace DominandoEFCore.Data
 
             optionsBuilder
                 .UseNpgsql(
-                    strConnection  // String de conexao com o banco de dados
-                   // p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery) // Configura de forma global o splitquery para divisão de consultas no banco de dados
+                    // String de conexao com o banco de dados
+                    strConnection
+
+                // Configura de forma global o splitquery para divisão de consultas no banco de dados
+                // p => p.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery) 
                 )
-                //.UseLazyLoadingProxies() // Ativar o tipo de carregamento lento
+
+                // Ativar o tipo de carregamento lento
+                //.UseLazyLoadingProxies() 
+
+                // =================== CONFIGURAÇÕES DE LOG =====================
                 .EnableSensitiveDataLogging() // Para exibir os valores dos parametros ao logar o SQL no console
-                .LogTo(Console.WriteLine, LogLevel.Information); // Onde deve logar a consulta e o nivel do Log
+
+                .LogTo(
+                    // Onde deve ser logado os comandos executados pelo EF  
+                    Console.WriteLine,
+                    // Eventos especificos que devem ser logados
+                    new[] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted },
+                    // Log a nivel de Informação
+                    LogLevel.Information,
+                    // Configurações de como deve ser logado (No exemplo, com horario local e em apenas uma unica linha cada log)
+                    DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine 
+                ); 
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
