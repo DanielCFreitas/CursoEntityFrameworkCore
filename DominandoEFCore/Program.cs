@@ -606,6 +606,9 @@ namespace DominandoEFCore
             db.Database.ExecuteSqlRaw("CALL CriarDepartamento(@p0, @p1)", "Departamento Via Procedure", true);
         }
 
+        /// <summary>
+        /// Criando Funcion (Procedure) de consulta no banco de dados
+        /// </summary>
         static void CriartStoredProcedureDeConsulta()
         {
             var criarDepartamentoProcedure = "CREATE OR REPLACE FUNCTION GetDepartamentos(Descricao TEXT) " +
