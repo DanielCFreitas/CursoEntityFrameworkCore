@@ -583,8 +583,8 @@ namespace DominandoEFCore
             }
         }
         #endregion
-    
 
+        #region StoredProcedures e Functions
         /// <summary>
         /// Criando StoredProcedure no Banco de Dados
         /// </summary>
@@ -636,5 +636,6 @@ namespace DominandoEFCore
                 Console.WriteLine(departamento.Descricao);
             }
         }
+        #endregion
     }
 }
