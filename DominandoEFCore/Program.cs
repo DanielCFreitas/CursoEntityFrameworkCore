@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultarDadosViaProcedure();
+            ConsultarDepartamento();
         }
 
         #region Metodos de apoio para o curso
@@ -637,5 +637,17 @@ namespace DominandoEFCore
             }
         }
         #endregion
+
+
+
+
+        /// <summary>
+        /// Testando Log Simplificado
+        /// </summary>
+        static void ConsultarDepartamento()
+        {
+            using var db = new ApplicationContext();
+            var departamentos = db.Departamentos.Where(w => w.Id > 0).ToArray();
+        }
     }
 }
