@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            CriartStoredProcedure();
+            InserirDadosViaProcedure();
         }
 
         #region Metodos de apoio para o curso
@@ -595,6 +595,15 @@ namespace DominandoEFCore
 
             using var db = new ApplicationContext();
             db.Database.ExecuteSqlRaw(criarDepartamentoProcedure);
+        }
+        
+        /// <summary>
+        /// Insersão de dados utilizando StoredProcedure
+        /// </summary>
+        static void InserirDadosViaProcedure()
+        {
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw("CALL CriarDepartamento(@p0, @p1)", "Departamento Via Procedure", true);
         }
     }
 }
