@@ -598,7 +598,7 @@ namespace DominandoEFCore
         }
         
         /// <summary>
-        /// Insersão de dados utilizando StoredProcedure
+        /// Inserção de dados utilizando StoredProcedure
         /// </summary>
         static void InserirDadosViaProcedure()
         {
