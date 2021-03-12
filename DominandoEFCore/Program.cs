@@ -15,6 +15,7 @@ namespace DominandoEFCore
         static void Main(string[] args)
         {
             ConsultarDepartamento();
+            Console.ReadLine();
         }
 
         #region Metodos de apoio para o curso
@@ -24,6 +25,8 @@ namespace DominandoEFCore
         /// <param name="db"></param>
         static void Setup(ApplicationContext db)
         {
+            db.Database.EnsureDeleted();
+
             if (db.Database.EnsureCreated())
             {
                 db.Departamentos.AddRange(
@@ -647,7 +650,9 @@ namespace DominandoEFCore
         static void ConsultarDepartamento()
         {
             using var db = new ApplicationContext();
+            Setup(db);
             var departamentos = db.Departamentos.Where(w => w.Id > 0).ToArray();
+            var teste = "";
         }
     }
 }

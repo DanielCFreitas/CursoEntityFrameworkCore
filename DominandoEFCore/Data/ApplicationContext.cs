@@ -45,7 +45,10 @@ namespace DominandoEFCore.Data
                 ); */
 
                 // Registrando logs do Entity Framework em um arquivo
-                .LogTo(_writer.WriteLine, LogLevel.Information);
+                //.LogTo(_writer.WriteLine, LogLevel.Information);
+
+                // Habilita log que detalha erros do Entity Framework Core
+                .EnableDetailedErrors();
         }
 
         public override void Dispose()
