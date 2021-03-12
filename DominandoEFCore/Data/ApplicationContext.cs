@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System;
+using System.IO;
 
 namespace DominandoEFCore.Data
 {
     public class ApplicationContext : DbContext
     {
+        private readonly StreamWriter _writer = new StreamWriter("meu_log_do_ef_core.txt", append: true); // Para registrar os logs do Entity Framework em um arquivo
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
 
@@ -30,7 +32,8 @@ namespace DominandoEFCore.Data
                 // =================== CONFIGURAÇÕES DE LOG =====================
                 .EnableSensitiveDataLogging() // Para exibir os valores dos parametros ao logar o SQL no console
 
-                .LogTo(
+                // FIltrando Logs
+                /*.LogTo(
                     // Onde deve ser logado os comandos executados pelo EF  
                     Console.WriteLine,
                     // Eventos especificos que devem ser logados
@@ -39,7 +42,16 @@ namespace DominandoEFCore.Data
                     LogLevel.Information,
                     // Configurações de como deve ser logado (No exemplo, com horario local e em apenas uma unica linha cada log)
                     DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine 
-                ); 
+                ); */
+
+                // Registrando logs do Entity Framework em um arquivo
+                .LogTo(_writer.WriteLine, LogLevel.Information);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _writer.Dispose();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
