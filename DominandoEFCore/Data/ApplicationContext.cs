@@ -200,10 +200,9 @@ namespace DominandoEFCore.Data
         /// Filtro para todas as consultas, filtrando registros que sao marcados como excluido com valores booleanos no banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Filtro Global
-            //modelBuilder.Entity<Departamento>().HasQueryFilter(q => !q.Excluido);
-        }
+            modelBuilder.Entity<Departamento>().HasQueryFilter(q => !q.Excluido);
+        }*/
     }
 }
