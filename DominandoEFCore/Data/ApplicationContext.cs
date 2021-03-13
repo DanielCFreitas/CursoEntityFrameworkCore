@@ -130,7 +130,7 @@ namespace DominandoEFCore.Data
         /// o BatchSize otimiza a insersao de dados ao enviar para o banco de dados os lotes de inserts
         /// o tamanho padrao para lotes de inserts sao de 42, mas podemos configurar um tamanho maior
         /// </summary>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
@@ -138,7 +138,22 @@ namespace DominandoEFCore.Data
                 .UseNpgsql(strConnection, o => o.MaxBatchSize(100))
                 .EnableSensitiveDataLogging() 
                 .LogTo(Console.WriteLine, LogLevel.Information);
+        }*/
+
+        /// <summary>
+        /// Configuração para o uso de TimeOut
+        /// 
+        /// </summary>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
+
+            optionsBuilder
+                .UseNpgsql(strConnection, o => o.CommandTimeout(5))
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information);
         }
+
 
 
         // =============================================== OnModelCreating =================================================================

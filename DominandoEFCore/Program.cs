@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            HabilitandoBatchSize();
+            TesteTimeOut();
             Console.ReadLine();
         }
 
@@ -644,7 +644,7 @@ namespace DominandoEFCore
 
 
         #region Infraestrutura
-        static void HabilitandoBatchSize()
+        static void TesteBatchSize()
         {
             using var db = new ApplicationContext();
             db.Database.EnsureDeleted();
@@ -656,6 +656,12 @@ namespace DominandoEFCore
             }
 
             db.SaveChanges();
+        }
+
+        static void TesteTimeOut()
+        {
+            using var db = new ApplicationContext();
+            db.Database.ExecuteSqlRaw("SELECT pg_sleep(10); pg_sleep ; SELECT 1;");
         }
         #endregion
 
