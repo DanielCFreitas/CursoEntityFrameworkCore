@@ -222,7 +222,7 @@ namespace DominandoEFCore.Data
         /// https://docs.microsoft.com/pt-br/ef/core/miscellaneous/collations-and-case-sensitivity
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+       /* protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configuração Global
             modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
@@ -230,6 +230,27 @@ namespace DominandoEFCore.Data
             // Configurãção para uma determinada tabela
             modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
                 .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+        }*/
+
+
+
+
+        /// <summary>
+        /// Configurando Sequences no banco de dados
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasSequence<int>("MinhaSequencia")
+                .StartsAt(1)
+                .IncrementsBy(2)
+                .HasMin(1)
+                .HasMax(10)
+                .IsCyclic(); // <- Reinicia sequencia quando atinge o valor maximo
+
+            modelBuilder.Entity<Departamento>()
+                .Property(p => p.Id)
+                .HasDefaultValueSql("nextval('\"MinhaSequencia\"')");
         }
     }
 }
