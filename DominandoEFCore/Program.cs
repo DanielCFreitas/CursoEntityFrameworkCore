@@ -645,7 +645,11 @@ namespace DominandoEFCore
 
         #region Infraestrutura
         /// <summary>
-        /// Seta um timeout para um comando especifo, sem usar a configuracao global do timeout
+        /// Seta um timeout para um comando especifo, sem usar a configuracao global do timeout,
+        /// Ao utilizar resiliencia para fazer requisicoes em caso de falhas, pode ocorrer o caso de o banco conseguir
+        /// salvar os dados mas na hora de retornar dar algum problema, e tentar fazer a requisicao para o banco novamente
+        /// duplicando dados ja existentes, para evitar este caso usamos o "strategy", que gerencia a transacao e so executa
+        /// apenas uma vez o comando SQL no banco de dados
         /// </summary>
         static void UsandoTimeOutParaUmComandoEspecifico()
         {
@@ -653,6 +657,22 @@ namespace DominandoEFCore
             db.Database.SetCommandTimeout(15);
 
             db.Database.ExecuteSqlRaw("SELECT pg_sleep(5); SELECT 1;");
+        }
+
+        static void ExecutarEstrategiaDeResiliencia()
+        {
+            using var db = new ApplicationContext();
+
+            var strategy = db.Database.CreateExecutionStrategy();
+            strategy.Execute(() =>
+            {
+                using var transaction = db.Database.BeginTransaction();
+
+                db.Departamentos.Add(new Departamento() { Descricao = "Departamento Transacao" });
+                db.SaveChanges();
+
+                transaction.Commit();
+            });
         }
 
         static void TesteBatchSize()
