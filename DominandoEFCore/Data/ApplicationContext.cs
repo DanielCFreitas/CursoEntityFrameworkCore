@@ -97,7 +97,7 @@ namespace DominandoEFCore.Data
 
 
         /// <summary>
-        /// Configuração para habilitar detalhes dos erros no console da aplicacao
+        /// Configuração para habilitar o carregamento lento em todas as consultas 
         /// </summary>
         /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -112,7 +112,7 @@ namespace DominandoEFCore.Data
 
 
         /// <summary>
-        /// Configuração para habilitar o carregamento lento em todas as consultas 
+        /// Configuração para habilitar detalhes dos erros no console da aplicacao
         /// </summary>
         /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -122,7 +122,6 @@ namespace DominandoEFCore.Data
                 .LogTo(Console.WriteLine)
                 .EnableDetailedErrors();
         }*/
-
 
 
 
