@@ -140,11 +140,15 @@ namespace DominandoEFCore.Data
                 .LogTo(Console.WriteLine, LogLevel.Information);
         }*/
 
+
+
+
+
+
         /// <summary>
         /// Configuração para o uso de TimeOut
-        /// 
         /// </summary>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
@@ -152,8 +156,33 @@ namespace DominandoEFCore.Data
                 .UseNpgsql(strConnection, o => o.CommandTimeout(5))
                 .EnableSensitiveDataLogging()
                 .LogTo(Console.WriteLine, LogLevel.Information);
-        }
+        }*/
 
+
+
+
+
+        /// <summary>
+        /// Deixando a aplicacao mais resiliente
+        /// Habilitando o EnableRetryOnFailure, ira trazer mais resiliencia ao banco de dados
+        /// Vai tentar fazer as requisicoes mesmo em caso de alguma falha no banco de dados por algumas vezes
+        /// e possivel passar um valor inteiro como parametro do metodo para indicar a quantidade de tentativas
+        /// que deve ser feito antes de lancar a exceção vinda do banco de dados
+        /// </summary>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
+
+            optionsBuilder
+                .UseNpgsql(
+                    strConnection,
+                    // 1º Parametro: Tenta realizar a requisicao por 4 vezes,
+                    // 2º Parametro: Tempo maximo de 10 segundos para as tentativas de requisicao para o banco de dados,
+                    // 3º Parametro: Não sobrescrever os codigos de erro ja existentes no EF Core 
+                    o => o.EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null)) 
+                .EnableSensitiveDataLogging()
+                .LogTo(Console.WriteLine, LogLevel.Information);
+        }
 
 
         // =============================================== OnModelCreating =================================================================
