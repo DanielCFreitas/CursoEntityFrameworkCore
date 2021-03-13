@@ -76,8 +76,8 @@ namespace DominandoEFCore.Data
                     LogLevel.Information,
                     // Configurações de como deve ser logado (No exemplo, com horario local e em apenas uma unica linha cada log)
                     DbContextLoggerOptions.LocalTime /*| DbContextLoggerOptions.SingleLine */
-               /* );
-        }*/
+        /* );
+ }*/
 
 
 
@@ -204,5 +204,32 @@ namespace DominandoEFCore.Data
         {
             modelBuilder.Entity<Departamento>().HasQueryFilter(q => !q.Excluido);
         }*/
+
+
+
+
+
+        /// <summary>
+        /// Uso de collaction no Entity Framework Core
+        /// A collaction determina algumas configurações de agrupamento e diferenciação de textos no banco de dados
+        /// Podemos configurar se o banco fará diferenciação entre letras maiusculas e minusculas,
+        /// quais campos especificos esssas regras se aplicam, ignorar acentuacao, etc....
+        /// CI = Case Insensitive
+        /// CS = Case Sensitive
+        /// AI = Acento Insensitive
+        /// AS = Acento Sensitive
+        /// Mais informações:
+        /// https://docs.microsoft.com/pt-br/ef/core/miscellaneous/collations-and-case-sensitivity
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configuração Global
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+
+            // Configurãção para uma determinada tabela
+            modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
+                .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+        }
     }
 }

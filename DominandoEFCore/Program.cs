@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            UsandoTimeOutParaUmComandoEspecifico();
+            TesteCollactions();
             Console.ReadLine();
         }
 
@@ -707,7 +707,16 @@ namespace DominandoEFCore
 
 
         #region Modelo de Dados
+        /// <summary>
+        /// Testando o uso de Collactions configuradko no OnModelCreating do ApplicationContext
+        /// </summary>
+        static void TesteCollactions()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
 
+        }
 
         #endregion
     }
