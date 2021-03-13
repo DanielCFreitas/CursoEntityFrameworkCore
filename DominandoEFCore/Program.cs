@@ -705,5 +705,10 @@ namespace DominandoEFCore
 
 
 
+
+        #region Modelo de Dados
+
+
+        #endregion
     }
 }

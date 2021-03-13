@@ -12,7 +12,15 @@ namespace DominandoEFCore.Data
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
+            optionsBuilder
+                .UseNpgsql(strConnection)
+                .LogTo(Console.WriteLine, LogLevel.Information)
+                .EnableSensitiveDataLogging();
+        }
 
 
         // =============================================== OnConfiguring =================================================================
@@ -169,7 +177,7 @@ namespace DominandoEFCore.Data
         /// e possivel passar um valor inteiro como parametro do metodo para indicar a quantidade de tentativas
         /// que deve ser feito antes de lancar a exceção vinda do banco de dados
         /// </summary>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
@@ -182,7 +190,7 @@ namespace DominandoEFCore.Data
                     o => o.EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null)) 
                 .EnableSensitiveDataLogging()
                 .LogTo(Console.WriteLine, LogLevel.Information);
-        }
+        }*/
 
 
         // =============================================== OnModelCreating =================================================================
