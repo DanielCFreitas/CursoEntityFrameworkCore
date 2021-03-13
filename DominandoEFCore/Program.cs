@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteTimeOut();
+            UsandoTimeOutParaUmComandoEspecifico();
             Console.ReadLine();
         }
 
@@ -644,6 +644,17 @@ namespace DominandoEFCore
 
 
         #region Infraestrutura
+        /// <summary>
+        /// Seta um timeout para um comando especifo, sem usar a configuracao global do timeout
+        /// </summary>
+        static void UsandoTimeOutParaUmComandoEspecifico()
+        {
+            using var db = new ApplicationContext();
+            db.Database.SetCommandTimeout(15);
+
+            db.Database.ExecuteSqlRaw("SELECT pg_sleep(5); SELECT 1;");
+        }
+
         static void TesteBatchSize()
         {
             using var db = new ApplicationContext();
@@ -661,8 +672,9 @@ namespace DominandoEFCore
         static void TesteTimeOut()
         {
             using var db = new ApplicationContext();
-            db.Database.ExecuteSqlRaw("SELECT pg_sleep(10); pg_sleep ; SELECT 1;");
+            db.Database.ExecuteSqlRaw("SELECT pg_sleep(10); SELECT 1;");
         }
+
         #endregion
 
 
