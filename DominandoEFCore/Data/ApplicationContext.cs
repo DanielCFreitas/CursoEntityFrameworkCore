@@ -53,7 +53,7 @@ namespace DominandoEFCore.Data
         /// O SplitQuery divide a consulta em outras menores para evitar de carregar dados a mais nas consultas, em alguns casos pode ser interessante o uso
         /// também é possível usar o SplitQuery apenas na hora da consulta, sem ser feito com configuração automatica igual o metodo abaixo
         /// </summary>
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
 
@@ -68,9 +68,8 @@ namespace DominandoEFCore.Data
                     LogLevel.Information,
                     // Configurações de como deve ser logado (No exemplo, com horario local e em apenas uma unica linha cada log)
                     DbContextLoggerOptions.LocalTime /*| DbContextLoggerOptions.SingleLine */
-                );
-        }
-
+               /* );
+        }*/
 
 
 
@@ -126,6 +125,20 @@ namespace DominandoEFCore.Data
 
 
 
+        /// <summary>
+        /// Configuração para o uso de BatchSize
+        /// o BatchSize otimiza a insersao de dados ao enviar para o banco de dados os lotes de inserts
+        /// o tamanho padrao para lotes de inserts sao de 42, mas podemos configurar um tamanho maior
+        /// </summary>
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
+
+            optionsBuilder
+                .UseNpgsql(strConnection, o => o.MaxBatchSize(100))
+                .EnableSensitiveDataLogging() 
+                .LogTo(Console.WriteLine, LogLevel.Information);
+        }
 
 
         // =============================================== OnModelCreating =================================================================

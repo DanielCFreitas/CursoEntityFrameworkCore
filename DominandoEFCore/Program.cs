@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultarDepartamento();
+            HabilitandoBatchSize();
             Console.ReadLine();
         }
 
@@ -641,6 +641,23 @@ namespace DominandoEFCore
         }
         #endregion
 
+
+
+        #region Infraestrutura
+        static void HabilitandoBatchSize()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            for(var i = 0; i < 50; i++)
+            {
+                db.Departamentos.Add(new Departamento() {  Descricao = $"Departamento {i}" });
+            }
+
+            db.SaveChanges();
+        }
+        #endregion
 
 
 
