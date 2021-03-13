@@ -641,8 +641,6 @@ namespace DominandoEFCore
         }
         #endregion
 
-
-
         #region Infraestrutura
         /// <summary>
         /// Seta um timeout para um comando especifo, sem usar a configuracao global do timeout,
@@ -659,7 +657,7 @@ namespace DominandoEFCore
             db.Database.ExecuteSqlRaw("SELECT pg_sleep(5); SELECT 1;");
         }
 
-        static void ExecutarEstrategiaDeResiliencia()
+        static void TesteParaExecutarEstrategiaDeResiliencia()
         {
             using var db = new ApplicationContext();
 
@@ -673,6 +671,14 @@ namespace DominandoEFCore
 
                 transaction.Commit();
             });
+        }
+
+        static void TesteLogSimplificado()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+            var departamentos = db.Departamentos.Where(w => w.Id > 0).ToArray();
+            var teste = "";
         }
 
         static void TesteBatchSize()
@@ -699,15 +705,5 @@ namespace DominandoEFCore
 
 
 
-        /// <summary>
-        /// Testando Log Simplificado
-        /// </summary>
-        static void ConsultarDepartamento()
-        {
-            using var db = new ApplicationContext();
-            Setup(db);
-            var departamentos = db.Departamentos.Where(w => w.Id > 0).ToArray();
-            var teste = "";
-        }
     }
 }
