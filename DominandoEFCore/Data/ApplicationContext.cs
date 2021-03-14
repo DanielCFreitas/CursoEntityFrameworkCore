@@ -239,7 +239,7 @@ namespace DominandoEFCore.Data
         /// Configurando Sequences no banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+       /* protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasSequence<int>("MinhaSequencia")
                 .StartsAt(1)
@@ -251,6 +251,23 @@ namespace DominandoEFCore.Data
             modelBuilder.Entity<Departamento>()
                 .Property(p => p.Id)
                 .HasDefaultValueSql("nextval('\"MinhaSequencia\"')");
+        }*/
+
+
+
+
+        /// <summary>
+        /// Configurando Indices no banco de dados
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Departamento>()
+                .HasIndex(p => new { p.Descricao, p .Ativo })
+                .HasDatabaseName("idx_meu_indice_composto")
+                .HasFilter("\"Descricao\" IS NOT NULL")
+                .IsUnique();
         }
     }
 }
