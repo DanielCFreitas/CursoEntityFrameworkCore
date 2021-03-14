@@ -11,6 +11,7 @@ namespace DominandoEFCore.Data
     {
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -260,7 +261,7 @@ namespace DominandoEFCore.Data
         /// Configurando Indices no banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Entity<Departamento>()
@@ -268,6 +269,25 @@ namespace DominandoEFCore.Data
                 .HasDatabaseName("idx_meu_indice_composto")
                 .HasFilter("\"Descricao\" IS NOT NULL")
                 .IsUnique();
+        }
+        */
+
+
+
+
+        /// <summary>
+        /// Propagação de dados iniciais para o banco de dados
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder
+                .Entity<Estado>()
+                .HasData(new[]
+                {
+                    new Estado{ Id = 1, Nome = "São Paulo" },
+                    new Estado{ Id = 2, Nome = "Sergipe" }
+                });
         }
     }
 }
