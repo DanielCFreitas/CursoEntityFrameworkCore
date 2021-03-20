@@ -1,4 +1,5 @@
-﻿using DominandoEFCore.Domain;
+﻿using DominandoEFCore.Conversores;
+using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
@@ -312,7 +313,7 @@ namespace DominandoEFCore.Data
         /// ele ira salvar um valor em string com a configuracao abaixo
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // (1 OPCAO PARA CONVERTER) Mais usada quando tem uma necessidade mais especifica
             // var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
@@ -326,6 +327,20 @@ namespace DominandoEFCore.Data
                 //.HasConversion(conversao);//
                 //.HasConversion(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p)); Salva no banco como string, le no C# como um Enum (3 OPCAO PARA CONVERTER)
                 //.HasConversion<string>(); Salva no banco como string (4 OPCAO PARA CONVERTER, SEM MUITAS OPCOES)
+        }*/
+
+
+
+
+        /// <summary>
+        /// Configurando conversor CUSTOMIZADO
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Conversor>()
+                .Property(p => p.Status)
+                .HasConversion(new ConversorCustomizado());
         }
     }
 }

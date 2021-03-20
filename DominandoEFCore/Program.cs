@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteConversorDeValor();
+            TesteConversorCustomizado();
             Console.ReadLine();
         }
 
@@ -738,6 +738,25 @@ namespace DominandoEFCore
         }
 
         static void TesteConversorDeValor() => TesteEsquemas();
+
+        static void TesteConversorCustomizado()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Conversores.Add(
+                new Conversor
+                {
+                    Status = Status.Devolvido
+                });
+
+            db.SaveChanges();
+
+            var conversorEmAnalise = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Status.Analise);
+
+            var conversorDevolvido = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Status.Devolvido);
+        }
         #endregion
     }
 }
