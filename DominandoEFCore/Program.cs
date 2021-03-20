@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteConversorCustomizado();
+            TestePropriedadesDeSombra();
             Console.ReadLine();
         }
 
@@ -756,6 +756,13 @@ namespace DominandoEFCore
             var conversorEmAnalise = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Status.Analise);
 
             var conversorDevolvido = db.Conversores.AsNoTracking().FirstOrDefault(p => p.Status == Status.Devolvido);
+        }
+
+        static void TestePropriedadesDeSombra()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
         #endregion
     }
