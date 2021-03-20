@@ -336,11 +336,25 @@ namespace DominandoEFCore.Data
         /// Configurando conversor CUSTOMIZADO
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Conversor>()
                 .Property(p => p.Status)
                 .HasConversion(new ConversorCustomizado());
+        }*/
+
+
+
+
+
+        /// <summary>
+        /// Configurando uma propriedade de sombra manualmente
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Departamento>()
+                .Property<DateTime>("UltimaAtualizacao");
         }
     }
 }
