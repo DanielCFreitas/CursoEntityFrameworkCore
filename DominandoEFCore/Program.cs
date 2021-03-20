@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 
 namespace DominandoEFCore
 {
@@ -14,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteProprieadesDeSombraCriadaPeloDesenvolvedor();
+            TesteOwnedTypes();
             Console.ReadLine();
         }
 
@@ -787,6 +788,39 @@ namespace DominandoEFCore
             var departamentos = db.Departamentos
                 .Where(w => EF.Property<DateTime>(w, "UltimaAtualizacao") < DateTime.Now)
                 .ToArray();
+        }
+
+        static void TesteOwnedTypes()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var cliente = new Cliente()
+            {
+                Nome = "Fulano de Tal",
+                Telefone = "(12) 3888-5847",
+                Endereco = new Endereco()
+                {
+                    Bairro = "Bairro Teste",
+                    Cidade = "Cidade Teste",
+                    Estado = "Estado Teste",
+                    Logradouro = "Logradouro Teste"
+                }
+            };
+
+            db.Clientes.Add(cliente);
+
+            db.SaveChanges();
+
+            var clientes = db.Clientes.AsNoTracking().ToList();
+            var options = new JsonSerializerOptions { WriteIndented = true };
+
+            clientes.ForEach(cliente =>
+            {
+                var json = JsonSerializer.Serialize(cliente, options);
+                Console.WriteLine(json);
+            });
         }
         #endregion
     }

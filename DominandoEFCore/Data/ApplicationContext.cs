@@ -13,6 +13,7 @@ namespace DominandoEFCore.Data
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Conversor> Conversores { get; set; }
+        public DbSet<Cliente> Clientes { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -351,10 +352,28 @@ namespace DominandoEFCore.Data
         /// Configurando uma propriedade de sombra manualmente
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Departamento>()
                 .Property<DateTime>("UltimaAtualizacao");
+        }*/
+
+
+
+        /// <summary>
+        /// Configurando uma Owned Type, tipo complexo
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Cliente>(p =>
+            {
+                p.OwnsOne(x => x.Endereco, end =>
+                {
+                    end.Property(p => p.Bairro).HasColumnName("Bairro");
+                    end.ToTable("Endereco");
+                });
+            });
         }
     }
 }
