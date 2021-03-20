@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TestePropriedadesDeSombra();
+            TesteProprieadesDeSombraCriadaPeloDesenvolvedor();
             Console.ReadLine();
         }
 
@@ -763,6 +763,30 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+        }
+
+        static void TesteProprieadesDeSombraCriadaPeloDesenvolvedor()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var departamento = new Departamento()
+            {
+                Descricao = "Departamento Propriedade de Sombra"
+            };
+
+            db.Departamentos.Add(departamento);
+
+            // INSERINDO DADO DE PROPRIEDADE DE SOMBRA
+            db.Entry(departamento).Property("UltimaAtualizacao").CurrentValue = DateTime.Now;
+
+            db.SaveChanges();
+
+            // CONSULTANDO PROPRIEDADE E SOMBRA
+            var departamentos = db.Departamentos
+                .Where(w => EF.Property<DateTime>(w, "UltimaAtualizacao") < DateTime.Now)
+                .ToArray();
         }
         #endregion
     }
