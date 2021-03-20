@@ -1,9 +1,8 @@
 ﻿using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
-using System.IO;
 
 namespace DominandoEFCore.Data
 {
@@ -12,6 +11,7 @@ namespace DominandoEFCore.Data
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
+        public DbSet<Conversor> Conversores { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -297,10 +297,35 @@ namespace DominandoEFCore.Data
         /// Esquemas no banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+       /* protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("cadastros");
             modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
+        }*/
+
+
+
+
+
+        /// <summary>
+        /// Configurando conversor de valor, ao inves do enum Versao salvar um tipo inteiro no banco de dados
+        /// ele ira salvar um valor em string com a configuracao abaixo
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // (1 OPCAO PARA CONVERTER) Mais usada quando tem uma necessidade mais especifica
+            // var conversao = new ValueConverter<Versao, string>(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p));
+
+            // (2 OPCAO PARA CONVERTER) usando biblioteca: Microsoft.EntityFrameworkCore.Storage.ValueConversion.
+            var conversao1 = new EnumToStringConverter<Versao>();
+
+            modelBuilder.Entity<Conversor>()
+                .Property(p => p.Versao)
+                .HasConversion(conversao1);
+                //.HasConversion(conversao);//
+                //.HasConversion(p => p.ToString(), p => (Versao)Enum.Parse(typeof(Versao), p)); Salva no banco como string, le no C# como um Enum (3 OPCAO PARA CONVERTER)
+                //.HasConversion<string>(); Salva no banco como string (4 OPCAO PARA CONVERTER, SEM MUITAS OPCOES)
         }
     }
 }

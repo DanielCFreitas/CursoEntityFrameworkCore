@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteEsquemas();
+            TesteConversorDeValor();
             Console.ReadLine();
         }
 
@@ -736,6 +736,8 @@ namespace DominandoEFCore
 
             Console.WriteLine(script);
         }
+
+        static void TesteConversorDeValor() => TesteEsquemas();
         #endregion
     }
 }
