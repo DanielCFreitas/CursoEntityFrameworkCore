@@ -279,7 +279,7 @@ namespace DominandoEFCore.Data
         /// Propagação de dados iniciais para o banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .Entity<Estado>()
@@ -288,6 +288,19 @@ namespace DominandoEFCore.Data
                     new Estado{ Id = 1, Nome = "São Paulo" },
                     new Estado{ Id = 2, Nome = "Sergipe" }
                 });
+        }*/
+
+
+
+
+        /// <summary>
+        /// Esquemas no banco de dados
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.HasDefaultSchema("cadastros");
+            modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
         }
     }
 }

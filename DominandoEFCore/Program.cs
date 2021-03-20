@@ -14,7 +14,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TestePropagarDados();
+            TesteEsquemas();
             Console.ReadLine();
         }
 
@@ -728,6 +728,14 @@ namespace DominandoEFCore
             Console.WriteLine(script);
         }
 
+        static void TesteEsquemas()
+        {
+            using var db = new ApplicationContext();
+
+            var script = db.Database.GenerateCreateScript();
+
+            Console.WriteLine(script);
+        }
         #endregion
     }
 }
