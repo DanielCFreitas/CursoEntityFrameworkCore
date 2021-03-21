@@ -15,6 +15,12 @@ namespace DominandoEFCore.Configurations
 
             // Faz o include automaticamente do governador sempre que consultar um estado
             builder.Navigation(p => p.Governador).AutoInclude();
+
+            builder
+                .HasMany(p => p.Cidades)
+                .WithOne(p => p.Estado)
+                .IsRequired(false);
+                // .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

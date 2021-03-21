@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteRelacionamentoUmParaUm();
+            TesteRelacionamentoUmParaMuitos();
             Console.ReadLine();
         }
 
@@ -846,6 +846,46 @@ namespace DominandoEFCore
             {
                 Console.WriteLine($"Estado: { estado.Nome } é governado por { estado.Governador.Nome }");
             });
+        }
+
+        static void TesteRelacionamentoUmParaMuitos()
+        {
+            using (var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var estado = new Estado()
+                {
+                    Nome = "Sergipe",
+                    Governador = new Governador() { Nome = "Rafael Almeida" }
+                };
+
+                estado.Cidades.Add(new Cidade() { Nome = "Itabaiana" });
+
+                db.Estados.Add(estado);
+
+                db.SaveChanges();
+            }
+
+            using (var db = new ApplicationContext())
+            {
+                var estados = db.Estados.ToList();
+
+                estados[0].Cidades.Add(new Cidade() { Nome = "Aracaju" });
+
+                db.SaveChanges();
+
+                foreach(var estado in db.Estados.Include(i => i.Cidades))
+                {
+                    Console.WriteLine($"Estado: { estado.Nome } / Governador: { estado.Governador.Nome }");
+
+                    foreach(var cidade in estado.Cidades)
+                    {
+                        Console.WriteLine($"\t Cidade: { cidade.Nome }");
+                    }
+                }
+            }
         }
         #endregion
     }
