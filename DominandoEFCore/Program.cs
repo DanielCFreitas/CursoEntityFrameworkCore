@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteRelacionamentoUmParaMuitos();
+            TesteRelacionamentoMuitosParaMuitos();
             Console.ReadLine();
         }
 
@@ -883,6 +883,46 @@ namespace DominandoEFCore
                     foreach(var cidade in estado.Cidades)
                     {
                         Console.WriteLine($"\t Cidade: { cidade.Nome }");
+                    }
+                }
+            }
+        }
+
+        static void TesteRelacionamentoMuitosParaMuitos()
+        {
+            using(var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var ator1 = new Ator() { Nome = "Rafael" };
+                var ator2 = new Ator() { Nome = "Pires" };
+                var ator3 = new Ator() { Nome = "Bruno" };
+
+                var filme1 = new Filme() { Nome = "A volta dos que não foram" };
+                var filme2 = new Filme() { Nome = "De volta para o futuro" };
+                var filme3 = new Filme() { Nome = "Poeira em alto mar" };
+
+                ator1.Filmes.Add(filme1);
+                ator1.Filmes.Add(filme2);
+
+                ator2.Filmes.Add(filme1);
+
+                filme3.Atores.Add(ator1);
+                filme3.Atores.Add(ator2);
+                filme3.Atores.Add(ator3);
+
+                db.AddRange(ator1, ator2, filme3);
+
+                db.SaveChanges();
+
+                foreach(var ator in db.Atores.Include(i => i.Filmes).ToList())
+                {
+                    Console.WriteLine($"Ator: { ator.Nome }");
+                    
+                    foreach(var filme in ator.Filmes)
+                    {
+                        Console.WriteLine($"\t Filme: { filme.Nome }");
                     }
                 }
             }

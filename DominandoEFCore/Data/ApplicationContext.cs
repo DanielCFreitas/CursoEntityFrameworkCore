@@ -1,17 +1,15 @@
-﻿using DominandoEFCore.Configurations;
-using DominandoEFCore.Conversores;
-using DominandoEFCore.Domain;
+﻿using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Reflection;
 
 namespace DominandoEFCore.Data
 {
     public class ApplicationContext : DbContext
     {
+        public DbSet<Ator> Atores{ get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Filme> Filmes { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Conversor> Conversores { get; set; }
