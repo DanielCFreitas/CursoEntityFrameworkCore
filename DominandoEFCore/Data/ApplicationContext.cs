@@ -1,9 +1,11 @@
-﻿using DominandoEFCore.Conversores;
+﻿using DominandoEFCore.Configurations;
+using DominandoEFCore.Conversores;
 using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Reflection;
 
 namespace DominandoEFCore.Data
 {
@@ -225,15 +227,15 @@ namespace DominandoEFCore.Data
         /// https://docs.microsoft.com/pt-br/ef/core/miscellaneous/collations-and-case-sensitivity
         /// </summary>
         /// <param name="modelBuilder"></param>
-       /* protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            // Configuração Global
-            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+        /* protected override void OnModelCreating(ModelBuilder modelBuilder)
+         {
+             // Configuração Global
+             modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
 
-            // Configurãção para uma determinada tabela
-            modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
-                .UseCollation("SQL_Latin1_General_CP1_CS_AS");
-        }*/
+             // Configurãção para uma determinada tabela
+             modelBuilder.Entity<Departamento>().Property(p => p.Descricao)
+                 .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+         }*/
 
 
 
@@ -242,19 +244,19 @@ namespace DominandoEFCore.Data
         /// Configurando Sequences no banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-       /* protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasSequence<int>("MinhaSequencia")
-                .StartsAt(1)
-                .IncrementsBy(2)
-                .HasMin(1)
-                .HasMax(10)
-                .IsCyclic(); // <- Reinicia sequencia quando atinge o valor maximo
+        /* protected override void OnModelCreating(ModelBuilder modelBuilder)
+         {
+             modelBuilder.HasSequence<int>("MinhaSequencia")
+                 .StartsAt(1)
+                 .IncrementsBy(2)
+                 .HasMin(1)
+                 .HasMax(10)
+                 .IsCyclic(); // <- Reinicia sequencia quando atinge o valor maximo
 
-            modelBuilder.Entity<Departamento>()
-                .Property(p => p.Id)
-                .HasDefaultValueSql("nextval('\"MinhaSequencia\"')");
-        }*/
+             modelBuilder.Entity<Departamento>()
+                 .Property(p => p.Id)
+                 .HasDefaultValueSql("nextval('\"MinhaSequencia\"')");
+         }*/
 
 
 
@@ -299,11 +301,11 @@ namespace DominandoEFCore.Data
         /// Esquemas no banco de dados
         /// </summary>
         /// <param name="modelBuilder"></param>
-       /* protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.HasDefaultSchema("cadastros");
-            modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
-        }*/
+        /* protected override void OnModelCreating(ModelBuilder modelBuilder)
+         {
+             modelBuilder.HasDefaultSchema("cadastros");
+             modelBuilder.Entity<Estado>().ToTable("Estados", "SegundoEsquema");
+         }*/
 
 
 
@@ -364,7 +366,7 @@ namespace DominandoEFCore.Data
         /// Configurando uma Owned Type, tipo complexo
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cliente>(p =>
             {
@@ -374,6 +376,25 @@ namespace DominandoEFCore.Data
                     end.ToTable("Endereco");
                 });
             });
+        }*/
+
+
+
+
+
+
+        /// <summary>
+        /// Aplicando configuracoes de classes externas
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Configurando um unico arquivo: 
+            // modelBuilder.ApplyConfiguration(new ClienteConfiguration());
+
+            // O Assembly identifica todos os arquivos de configuracao
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
         }
     }
 }
