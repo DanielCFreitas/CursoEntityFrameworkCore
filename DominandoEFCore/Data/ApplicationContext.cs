@@ -9,6 +9,7 @@ namespace DominandoEFCore.Data
     {
         public DbSet<Ator> Atores{ get; set; }
         public DbSet<Departamento> Departamentos { get; set; }
+        public DbSet<Documento> Documentos { get; set; }
         public DbSet<Filme> Filmes { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }

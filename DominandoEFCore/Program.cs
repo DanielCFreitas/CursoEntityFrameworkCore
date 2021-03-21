@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteRelacionamentoMuitosParaMuitos();
+            TesteCampoDeApoio();
             Console.ReadLine();
         }
 
@@ -924,6 +924,26 @@ namespace DominandoEFCore
                     {
                         Console.WriteLine($"\t Filme: { filme.Nome }");
                     }
+                }
+            }
+        }
+
+        static void TesteCampoDeApoio()
+        {
+            using (var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var documento = new Documento();
+                documento.SetCPF("12345678933");
+
+                db.Documentos.Add(documento);
+                db.SaveChanges();
+
+                foreach(var doc in db.Documentos.AsNoTracking())
+                {
+                    Console.WriteLine($"CPF -> { doc.GetCPF() }");
                 }
             }
         }
