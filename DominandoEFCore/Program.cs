@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ExemploPacoteDePropriedades();
+            Atributos();
             Console.ReadLine();
         }
 
@@ -704,9 +704,6 @@ namespace DominandoEFCore
 
         #endregion
 
-
-
-
         #region Modelo de Dados
         /// <summary>
         /// Testando o uso de Collactions configuradko no OnModelCreating do ApplicationContext
@@ -1013,6 +1010,18 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["Valor"]}");
                 }
+            }
+        }
+        #endregion
+
+        #region Annotations
+        static void Atributos()
+        {
+            using(var db = new ApplicationContext())
+            {
+                var script = db.Database.GenerateCreateScript();
+
+                Console.WriteLine(script);
             }
         }
         #endregion
