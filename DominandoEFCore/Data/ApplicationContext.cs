@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 
 namespace DominandoEFCore.Data
 {
@@ -19,6 +20,8 @@ namespace DominandoEFCore.Data
         public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Instrutor> Instrutores { get; set; }
         public DbSet<Aluno> Alunos { get; set; }
+
+        public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -390,7 +393,7 @@ namespace DominandoEFCore.Data
         /// Aplicando configuracoes de classes externas
         /// </summary>
         /// <param name="modelBuilder"></param>
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        /*protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configurando um unico arquivo: 
             // modelBuilder.ApplyConfiguration(new ClienteConfiguration());
@@ -398,6 +401,32 @@ namespace DominandoEFCore.Data
             // O Assembly identifica todos os arquivos de configuracao
             //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+        }
+        */
+
+
+        /// <summary>
+        /// Aplicando configuracoes de sacola de propriedades
+        /// </summary>
+        /// <param name="modelBuilder"></param>
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // Aplicando as configuracoes de outras tabelas
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+
+            // Aplicando de fato a sacola de propriedades
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("Configuracoes", b =>
+            {
+                b.Property<int>("Id");
+
+                b.Property<string>("Chave")
+                    .HasColumnType("VARCHAR(40)")
+                    .IsRequired();
+
+                b.Property<string>("Valor")
+                    .HasColumnType("VARCHAR(255)")
+                    .IsRequired();
+            });
         }
     }
 }

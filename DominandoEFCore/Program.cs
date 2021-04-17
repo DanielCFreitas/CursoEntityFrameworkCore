@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ExemploDeTabelaPorHeranca();
+            ExemploPacoteDePropriedades();
             Console.ReadLine();
         }
 
@@ -983,6 +983,35 @@ namespace DominandoEFCore
                 foreach(var alunoItem in alunos)
                 {
                     Console.WriteLine($"Id: {alunoItem.Id} -> {alunoItem.Nome}, Idade: {alunoItem.Idade}, Data do Contrato: {alunoItem.DataContrato}");
+                }
+            }
+        }
+
+        static void ExemploPacoteDePropriedades()
+        {
+            using(var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var configuracao = new Dictionary<string, object>
+                {
+                    ["Chave"] = "SenhaBancoDeDados",
+                    ["Valor"] = Guid.NewGuid().ToString()
+                };
+
+                db.Configuracoes.Add(configuracao);
+                db.SaveChanges();
+
+                var configuracoes = db
+                    .Configuracoes
+                    .AsNoTracking()
+                    .Where(w => w["Chave"] == "SenhaBancoDeDados")
+                    .ToArray();
+
+                foreach(var dic in configuracoes)
+                {
+                    Console.WriteLine($"Chave: {dic["Chave"]} - Valor: {dic["Valor"]}");
                 }
             }
         }
