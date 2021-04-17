@@ -8,13 +8,15 @@ namespace DominandoEFCore.Domain
     public class Atributo
     {
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Column("MinhaDescricao", TypeName = "VARCHAR(100)")]
         public string Descricao { get; set; }
 
-        [Required]
+        //[Required]
         [MaxLength(255)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public string Observacao { get; set; }
     }
 
