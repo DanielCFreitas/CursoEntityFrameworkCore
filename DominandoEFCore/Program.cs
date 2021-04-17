@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteCampoDeApoio();
+            ExemploDeTabelaPorHeranca();
             Console.ReadLine();
         }
 
@@ -944,6 +944,45 @@ namespace DominandoEFCore
                 foreach(var doc in db.Documentos.AsNoTracking())
                 {
                     Console.WriteLine($"CPF -> { doc.GetCPF() }");
+                }
+            }
+        }
+
+        static void ExemploDeTabelaPorHeranca()
+        {
+            using (var db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                var pessoa = new Pessoa { Nome = "Fulano de Tal" };
+                var instrutor = new Instrutor { Nome = "Rafael Almeida", Tecnologia = ".NET", Desde = DateTime.Now };
+                var aluno = new Aluno { Nome = "Maria Thysbe", Idade = 31, DataContrato = DateTime.Now.AddDays(-1) };
+
+                db.AddRange(pessoa, instrutor, aluno);
+                db.SaveChanges();
+
+                var pessoas = db.Pessoas.AsNoTracking().ToArray();
+                var instrutores = db.Instrutores.AsNoTracking().ToArray();
+                // var alunos = db.Alunos.AsNoTracking().ToArray();
+                var alunos = db.Pessoas.OfType<Aluno>().AsNoTracking().ToArray(); // Sem o uso de DbSet atraves do OffType
+
+                Console.WriteLine("----- Pessoas -----");
+                foreach(var pessoaItem in pessoas)
+                {
+                    Console.WriteLine($"{pessoaItem.Id} -> {pessoaItem.Nome}");
+                }
+
+                Console.WriteLine("----- Instrutores -----");
+                foreach(var instrutorItem in instrutores)
+                {
+                    Console.WriteLine($"Id: {instrutorItem.Id} -> {instrutorItem.Nome}, Tecnologia: {instrutorItem.Tecnologia}, Desde: {instrutorItem.Desde}");
+                }
+
+                Console.WriteLine("----- Alunos -----");
+                foreach(var alunoItem in alunos)
+                {
+                    Console.WriteLine($"Id: {alunoItem.Id} -> {alunoItem.Nome}, Idade: {alunoItem.Idade}, Data do Contrato: {alunoItem.DataContrato}");
                 }
             }
         }

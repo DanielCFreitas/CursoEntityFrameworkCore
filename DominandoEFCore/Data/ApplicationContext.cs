@@ -16,6 +16,10 @@ namespace DominandoEFCore.Data
         public DbSet<Conversor> Conversores { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
 
+        public DbSet<Pessoa> Pessoas { get; set; }
+        public DbSet<Instrutor> Instrutores { get; set; }
+        public DbSet<Aluno> Alunos { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
