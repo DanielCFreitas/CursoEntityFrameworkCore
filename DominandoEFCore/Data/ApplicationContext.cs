@@ -25,6 +25,8 @@ namespace DominandoEFCore.Data
 
         public DbSet<Atributo> Atributos { get; set; }
 
+        public DbSet<Aeroporto> Aeroportos { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             const string strConnection = "User ID=postgres;Password=admin;Host=localhost;Port=5432;Database=DevIO-02;";
