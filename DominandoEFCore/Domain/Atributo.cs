@@ -7,6 +7,7 @@ namespace DominandoEFCore.Domain
 {
     [Table("TabelaAtributos")]
     [Index(nameof(Descricao), nameof(Id), IsUnique = true)]
+    [Comment("Meu comentario de minha tabela")]
     public class Atributo
     {
         [Key]
@@ -14,6 +15,7 @@ namespace DominandoEFCore.Domain
         public int Id { get; set; }
 
         [Column("MinhaDescricao", TypeName = "VARCHAR(100)")]
+        [Comment("Meu comentario para o meu campo")]
         public string Descricao { get; set; }
 
         //[Required]
