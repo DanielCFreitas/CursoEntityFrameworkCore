@@ -1036,5 +1036,74 @@ namespace DominandoEFCore
             }
         }
         #endregion
+
+
+        #region EF Functions
+
+        /// <summary>
+        /// Criando o banco de dados e preenchendo os dados da tabela Funcoes
+        /// </summary>
+        static void ApagarCriarBancoDeDados()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Funcoes.AddRange(
+                new Funcao()
+                {
+                    Data1 = DateTime.Now.AddDays(2),
+                    Data2 = "2021-01-01",
+                    Descricao1 = "Bala 1",
+                    Descricao2 = "Bala 1"
+                },
+                new Funcao()
+                {
+                    Data1 = DateTime.Now.AddDays(1),
+                    Data2 = "XX21-01-01",
+                    Descricao1 = "Bola 1",
+                    Descricao2 = "Bola 1"
+                },
+                new Funcao()
+                {
+                    Data1 = DateTime.Now.AddDays(1),
+                    Data2 = "XX21-01-01",
+                    Descricao1 = "Tela",
+                    Descricao2 = "Tela"
+                }
+            );
+
+            db.SaveChanges();
+        }
+
+        /// <summary>
+        /// Exemplo de funcoes que envolvem datas
+        /// OS EXEMPLOS MOSTRADOS NESTA AULA, O POSTGRES NAO POSSUI METODOS PARA ELES
+        /// </summary>
+        static void FuncoesDeDatas()
+        {
+            ApagarCriarBancoDeDados();
+
+            using(var db = new ApplicationContext())
+            {
+                var script = db.Database.GenerateCreateScript();
+
+                Console.WriteLine(script);
+
+                var dados = db.Funcoes.AsNoTracking().Select(s => new
+                {
+                    //Dias = EF.Functions.DateDiffDay(DateTime.Now, s.Data1),
+                    //Data = EF.Functions.DateFromParts(2021, 1, 2),                    AS 3 FUNCOES SO VAO FUNCIONAR COM O SQLSERVER
+                    //DataValida = EF.Functions.IsDate(s.Data2)
+                });
+
+                foreach(var dado in dados)
+                {
+                    Console.WriteLine(dado);
+                }
+            }
+        }
+
+        #endregion
     }
 }
