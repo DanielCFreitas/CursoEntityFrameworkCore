@@ -1129,6 +1129,28 @@ namespace DominandoEFCore
                 }
             }
         }
+
+        /// <summary>
+        /// Verificar o tamanho de dados em bytes que foi alocado no banco para um campo especifico
+        /// </summary>
+        static void FuncaoDataLength()
+        {
+            using(var db = new ApplicationContext())
+            {
+                var resultado = db
+                    .Funcoes
+                    .AsNoTracking()
+                    .Select(s => new
+                    {
+                        //TotalBytesCampoData = EF.Functions.DataLength(s.Data1),
+                        //TotalBytes = EF.Functions.DataLength(s.Data1),                    FUNCAO DISPONIVEL APENAS PARA O SQL SERVER
+                        //TotalBytes2 = EF.Functions.DataLength(s.Data1),
+                        Total1 = s.Descricao1.Length,
+                        Total2 = s.Descricao2.Length,
+                    })
+                    .FirstOrDefault();
+            }
+        }
         #endregion
     }
 }
