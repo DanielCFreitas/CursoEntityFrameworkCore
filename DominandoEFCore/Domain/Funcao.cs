@@ -7,7 +7,7 @@ namespace DominandoEFCore.Domain
     {
         public int Id { get; set; }
 
-        [Column(TypeName = "NVARCHAR(100)")]
+        [Column(TypeName = "VARCHAR(100)")]
         public string Descricao1 { get; set; }
         
         [Column(TypeName = "VARCHAR(100)")]

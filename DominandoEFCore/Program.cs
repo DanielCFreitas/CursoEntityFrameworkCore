@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            Atributos();
+            FuncaoLike();
             Console.ReadLine();
         }
 
@@ -1104,6 +1104,31 @@ namespace DominandoEFCore
             }
         }
 
+        /// <summary>
+        /// Exemplo de uso da funcao LIKE
+        /// </summary>
+        static void FuncaoLike()
+        {
+            ApagarCriarBancoDeDados();
+            using (var db = new ApplicationContext())
+            {
+                var script = db.Database.GenerateCreateScript();
+
+                Console.WriteLine(script);
+
+                var dados = db.Funcoes
+                    .AsNoTracking()
+                    .Where(w => EF.Functions.Like(w.Descricao1, "%Bo%"))
+                    .Select(s => s.Descricao1)
+                    .ToArray();
+
+                Console.WriteLine("Resultado: ");
+                foreach(var descricao in dados)
+                {
+                    Console.WriteLine(descricao);
+                }
+            }
+        }
         #endregion
     }
 }
