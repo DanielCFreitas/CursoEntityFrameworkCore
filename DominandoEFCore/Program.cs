@@ -15,7 +15,7 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FuncaoLike();
+            FuncaoCollate();
             Console.ReadLine();
         }
 
@@ -1151,6 +1151,28 @@ namespace DominandoEFCore
                     .FirstOrDefault();
             }
         }
+
+        /// <summary>
+        /// Uso de Collactions usando o EF Functions (Deve-se criar as collactions antes no banco de dados para serem usadas no C#)
+        /// </summary>
+        static void FuncaoCollate()
+        {
+            using(var db = new ApplicationContext())
+            {
+                var consulta1 = db
+                    .Funcoes
+                    .FirstOrDefault(f => EF.Functions.Collate(f.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "tela");
+                
+                var consulta2 = db
+                    .Funcoes
+                    .FirstOrDefault(f => EF.Functions.Collate(f.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela");
+
+                Console.WriteLine($"Consulta1: {consulta1?.Descricao1}");
+                Console.WriteLine($"Consulta2: {consulta2?.Descricao1}");
+            }
+        }
+
+
         #endregion
     }
 }
